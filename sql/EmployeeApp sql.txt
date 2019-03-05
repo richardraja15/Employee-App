@@ -1,0 +1,28 @@
+create table adminlogin(user_name varchar(10)primary key(user_name),password varchar(10));
+ insert into adminlogin values('ric@gmail','richardraja15');
+insert into adminlogin values('siva@gmail','sivasubu15');
+create table employee(id number(6) primary key(id),name varchar2(20),department_id number(5) constraint department_id_fk references department(id),
+position_id number(5) constraint position_id_fk references position(id));
+create table department(id number(8),name varchar2(10),constraint dep_id_pk primary key(id));
+create sequence department_id_seq
+start with 1
+increment by 1;
+insert into department values(department_id_seq.nextval,'appCONNECT');
+insert into department values(department_id_seq.nextval,'appMIGRATE');
+insert into department values(department_id_seq.nextval,'appIOT');
+insert into department values(department_id_seq.nextval,'SAP');
+insert into department values(department_id_seq.nextval,'e_chain');
+insert into department values(department_id_seq.nextval,'Oracle');
+create table position(id number(5),name varchar2(10),salary number(10),constraint pos_id_pk primary key(id));
+create sequence position_id_seq
+start with 1
+increment by 1;
+insert into position values(position_id_seq.nextval,'intern',12000);
+insert into position values(position_id_seq.nextval,'Fresher',14000);
+insert into position values(position_id_seq.nextval,'TeamLeader',20000);
+insert into position values(position_id_seq.nextval,'Manager',25000);
+insert into position values(position_id_seq.nextval,'Vp',35000);
+create table userlogin(user_id number(6) constraint login_id_fk references employee(id),user_name varchar2(20)constraint user_id_pk primary key
+,password varchar2(20));
+desc EMPLOYEE_INFO;
+create table employee_info(id number(6) references employee(id),email_id varchar2(20),phone_number varchar2(15),address varchar2(50),gender varchar2(6));
