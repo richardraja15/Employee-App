@@ -6,7 +6,7 @@ start with 1
 increment by 1;
 create table employee(id number(6),name varchar2(20),department_id number(5),
 position_id number(5),foreign key(department_id)references department(id),foreign key(position_id)references position(id),primary key(id));
-create table department(id number(8),name varchar2(10),constraint dep_id_pk primary key(id));
+create table department(id number(6),name varchar2(15),constraint dep_id_pk primary key(id));
 create sequence department_id_seq
 start with 1
 increment by 1;
@@ -25,6 +25,5 @@ insert into position values(position_id_seq.nextval,'Fresher',14000);
 insert into position values(position_id_seq.nextval,'TeamLeader',20000);
 insert into position values(position_id_seq.nextval,'Manager',25000);
 insert into position values(position_id_seq.nextval,'Vp',35000);
-create table userlogin(user_id number(6) constraint login_id_fk references employee(id),user_name varchar2(20)constraint user_id_pk primary key
-,password varchar2(20));
-create table employee_info(id number(6) costraint info_id_fk references employee(id),email_id varchar2(20),phone_number varchar2(15),address varchar2(50),gender varchar2(6));
+create table userlogin(user_id number(6),user_name varchar2(20),password varchar2(20),constraint login_id_fk foreign key(user_id)references employee(id),constraint user_id_pk primary key(user_name));
+create table employee_info(id number(6) ,email_id varchar2(20),phone_number varchar2(15),address varchar2(50),gender varchar2(6),constraint info_id_fk foreign key(id) references employee(id));
