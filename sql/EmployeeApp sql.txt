@@ -4,8 +4,8 @@ insert into adminlogin values('siva@gmail','sivasubu15');
 create sequence employee_id_seq
 start with 1
 increment by 1;
-create table employee(employee_id_seq.nextval,name varchar2(20),department_id number(5) constraint department_id_fk references department(id));
-position_id number(5) constraint position_id_fk references position(id));
+create table employee(id number(6),name varchar2(20),department_id number(5),
+position_id number(5),foreign key(department_id)references department(id),foreign key(position_id)references position(id),primary key(id));
 create table department(id number(8),name varchar2(10),constraint dep_id_pk primary key(id));
 create sequence department_id_seq
 start with 1
