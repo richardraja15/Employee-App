@@ -5,7 +5,7 @@ create sequence employee_id_seq
 start with 1
 increment by 1;
 create table employee(id number(6),name varchar2(20),department_id number(5),
-position_id number(5),foreign key(department_id)references department(id),foreign key(position_id)references position(id),primary key(id));
+position_id number(5),joining_date date,foreign key(department_id)references department(id),foreign key(position_id)references position(id),primary key(id));
 create table department(id number(6),name varchar2(15),constraint dep_id_pk primary key(id));
 create sequence department_id_seq
 start with 1
