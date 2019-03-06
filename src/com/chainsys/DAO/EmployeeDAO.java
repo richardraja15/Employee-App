@@ -15,68 +15,75 @@ public class EmployeeDAO {
 
 	String sql;
 
-	public void addEmployee(Employee employee) throws Exception {
+	public boolean addEmployee(final Employee employee) throws Exception {
 		Connection connection = ConnectionUtil.getConnection();
-		PreparedStatement preparedStatement;
+		PreparedStatement preparedStatement = null;
+		boolean success = false;
 		try {
-			sql = "insert into employee values(?,?,?,?,?)";
+			sql = "insert into employee values(employee_id_seq.nextval,?,?,?,?)";
 			preparedStatement = connection.prepareStatement(sql);
-			preparedStatement.setInt(1, employee.getId());
-			preparedStatement.setString(2, employee.getName());
-			preparedStatement.setInt(3, employee.getDepartment().getId());
-			preparedStatement.setInt(4, employee.getPosition().getId());
-			preparedStatement.setDate(5,
+
+			preparedStatement.setString(1, employee.getName());
+			preparedStatement.setInt(2, employee.getDepartment().getId());
+			preparedStatement.setInt(3, employee.getPosition().getId());
+			preparedStatement.setDate(4,
 					Date.valueOf(employee.getJoiningDate()));
-			preparedStatement.executeUpdate();
+			int rows = preparedStatement.executeUpdate();
+			if (rows > 0) {
+				success = true;
+			}
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
-			throw new Exception("unable to insert employee");
+			throw new Exception("unable to add");
 
+		} finally {
+			ConnectionUtil.close(connection, preparedStatement, null);
 		}
-		ConnectionUtil.close(connection, preparedStatement, null);
+
+		return success;
+
 	}
 
 	public Employee FindById(int id) throws Exception {
 		Connection connection = ConnectionUtil.getConnection();
-		PreparedStatement preparedStatement;
-		ResultSet resultSet;
-		Employee employee =null;
-			try {
-				sql = "select id,name,department_id,position_id,joining_date from employee where id=? order by id";
-				preparedStatement = connection.prepareStatement(sql);
-				preparedStatement.setInt(1, id);
-				resultSet = preparedStatement.executeQuery();
-				if (resultSet.next()) {
-					employee=new Employee();
-					employee.setId(resultSet.getInt("id"));
-					employee.setName(resultSet.getString("name"));
-					Department department = new Department();
-					Department department2 = new Department();
-					DepartmentDAO departmentDAO = new DepartmentDAO();
-					department.setId(resultSet.getInt("department_id"));
-					department2 = departmentDAO.fetchName(department);
-					employee.setDepartment(department2);
-					Position position = new Position();
-					Position position2 = new Position();
-					PositionDAO positionDAO = new PositionDAO();
-					position.setId(resultSet.getInt("position_id"));
-					position2 = positionDAO.fetchName(position);
-					employee.setPosition(position2);
-					employee.setJoiningDate(resultSet.getDate("joining_date")
-							.toLocalDate());
+		PreparedStatement preparedStatement = null;
+		ResultSet resultSet = null;
+		Employee employee = null;
+		try {
+			sql = "SELECT e.id as id, e.name as name,e.joining_date as joiningdate,d.name as department,p.name as position,p.salary as salary FROM ((employee e  INNER JOIN department d  ON e.department_id = d.id)INNER JOIN position p  ON e.position_id = p.id)where e.id=?";
+			preparedStatement = connection.prepareStatement(sql);
+			preparedStatement.setInt(1, id);
+			resultSet = preparedStatement.executeQuery();
+			if (resultSet.next()) {
+				employee = new Employee();
+				employee.setId(resultSet.getInt("id"));
+				employee.setName(resultSet.getString("name"));
+				Department department = new Department();
+				department.setName(resultSet.getString("department"));
+				employee.setDepartment(department);
+				Position position = new Position();
+				position.setName(resultSet.getString("position"));
+				position.setSalary(resultSet.getFloat("salary"));
+				employee.setPosition(position);
+
+				employee.setJoiningDate(resultSet.getDate("joiningdate")
+						.toLocalDate());
 			}
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
+
 			throw new Exception("unable to select records by id");
 		}
-		ConnectionUtil.close(connection, preparedStatement, resultSet);
+		finally {
+			ConnectionUtil.close(connection, preparedStatement,resultSet);
+		}
 		return employee;
 	}
 
 	public ArrayList<Employee> selectId() throws Exception {
 		Connection connection = ConnectionUtil.getConnection();
-		PreparedStatement preparedStatement;
-		ResultSet resultSet;
+		PreparedStatement preparedStatement = null;
+		ResultSet resultSet = null;
 		ArrayList<Employee> bList = new ArrayList<Employee>();
 		try {
 			sql = "select id from employee";
@@ -92,7 +99,9 @@ public class EmployeeDAO {
 			// TODO Auto-generated catch block
 			throw new Exception("unable to select ID");
 		}
-		ConnectionUtil.close(connection, preparedStatement, resultSet);
+		finally {
+			ConnectionUtil.close(connection, preparedStatement, resultSet);
+		}
 		return bList;
 
 	}
@@ -100,7 +109,7 @@ public class EmployeeDAO {
 	public void deleteById(int id) throws Exception {
 		Connection connection = ConnectionUtil.getConnection();
 
-		PreparedStatement preparedStatement;
+		PreparedStatement preparedStatement = null;
 		try {
 			sql = "delete from employee where id=?";
 			preparedStatement = connection.prepareStatement(sql);
@@ -111,46 +120,9 @@ public class EmployeeDAO {
 			// TODO Auto-generated catch block
 			throw new Exception("unable to delete records");
 		}
-		ConnectionUtil.close(connection, preparedStatement, null);
-	}
-
-	public ArrayList<Employee> FindAll() throws Exception {
-		Connection connection = ConnectionUtil.getConnection();
-		PreparedStatement preparedStatement = null;
-		ResultSet resultSet = null;
-		ArrayList<Employee> bList = new ArrayList<Employee>();
-		try {
-			sql = "select id,name,department_id,position_id,joining_date from employee order by id";
-			preparedStatement = connection.prepareStatement(sql);
-			resultSet = preparedStatement.executeQuery(sql);
-
-			while (resultSet.next()) {
-				Employee employee = new Employee();
-				employee = new Employee();
-				employee.setId(resultSet.getInt("id"));
-				employee.setName(resultSet.getString("name"));
-				Department department = new Department();
-				Department department2 = new Department();
-				DepartmentDAO departmentDAO = new DepartmentDAO();
-				department.setId(resultSet.getInt("department_id"));
-				department2 = departmentDAO.fetchName(department);
-				employee.setDepartment(department2);
-				Position position = new Position();
-				Position position2 = new Position();
-				PositionDAO positionDAO = new PositionDAO();
-				position.setId(resultSet.getInt("position_id"));
-				position2 = positionDAO.fetchName(position);
-				employee.setPosition(position2);
-				employee.setJoiningDate(resultSet.getDate("joining_date")
-						.toLocalDate());
-				bList.add(employee);
-			}
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			throw new Exception("unable to display records");
+		finally {
+			ConnectionUtil.close(connection, preparedStatement, null);
 		}
-		ConnectionUtil.close(connection, preparedStatement, resultSet);
-		return bList;
 	}
 
 	public void Update(Employee employee) throws Exception {
@@ -174,7 +146,9 @@ public class EmployeeDAO {
 			// TODO Auto-generated catch block
 			throw new Exception("unable to update");
 		}
-		ConnectionUtil.close(connection, preparedStatement, null);
+		finally {
+			ConnectionUtil.close(connection, preparedStatement, null);
+		}
 	}
 
 	public boolean getId(int id) throws Exception {
@@ -204,7 +178,7 @@ public class EmployeeDAO {
 
 	public String getName(int id) throws Exception {
 		Connection connection = ConnectionUtil.getConnection();
-		PreparedStatement preparedStatement;
+		PreparedStatement preparedStatement = null;
 		ResultSet resultSet;
 		String name = null;
 		try {
@@ -220,8 +194,49 @@ public class EmployeeDAO {
 			// TODO Auto-generated catch block
 			throw new Exception("unable to get name");
 		}
-		ConnectionUtil.close(connection, preparedStatement, resultSet);
+		finally {
+			ConnectionUtil.close(connection, preparedStatement, null);
+		}
 		return name;
 
 	}
+
+	public ArrayList<Employee> FindAll() throws Exception {
+		Connection connection = ConnectionUtil.getConnection();
+		PreparedStatement preparedStatement = null;
+		ResultSet resultSet = null;
+		ArrayList<Employee> list = new ArrayList<Employee>();
+		try {
+			sql = "SELECT e.id as id, e.name as name,e.joining_date as joiningdate,d.name as department,p.name as position,p.salary as salary FROM ((employee e  INNER JOIN department d  ON e.department_id = d.id)INNER JOIN position p  ON e.position_id = p.id)order by e.id";
+			preparedStatement = connection.prepareStatement(sql);
+			resultSet = preparedStatement.executeQuery(sql);
+
+			while (resultSet.next()) {
+				Employee employee = new Employee();
+				employee = new Employee();
+				employee.setId(resultSet.getInt("id"));
+				employee.setName(resultSet.getString("name"));
+				Department department = new Department();
+				department.setName(resultSet.getString("department"));
+				employee.setDepartment(department);
+				Position position = new Position();
+				position.setName(resultSet.getString("position"));
+				position.setSalary(resultSet.getFloat("salary"));
+				employee.setPosition(position);
+				employee.setJoiningDate(resultSet.getDate("joiningdate")
+						.toLocalDate());
+				list.add(employee);
+			}
+
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			// throw new Exception("unable to select records by id");
+		}
+		finally {
+			ConnectionUtil.close(connection, preparedStatement, resultSet);
+		}
+		return list;
+	}
+
 }

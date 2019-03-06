@@ -3,6 +3,7 @@ package com.chainsys.DAO;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+
 import com.chainsy.model.Employee;
 import com.chainsy.model.User;
 import com.chainsys.controller.ConnectionUtil;
@@ -11,10 +12,11 @@ public class UserDAO {
 
 	String sql;
 
-	public void setUserName(User user) throws Exception {
+	public boolean setUserName(User user) throws Exception {
 		Connection connection = ConnectionUtil.getConnection();
 
-		PreparedStatement preparedStatement;
+		PreparedStatement preparedStatement = null;
+		boolean success = false;
 		try {
 			sql = "insert into userlogin values(?,?,?)";
 			preparedStatement = connection.prepareStatement(sql);
@@ -22,37 +24,51 @@ public class UserDAO {
 			preparedStatement.setString(2, user.getUserName());
 			preparedStatement.setString(3, user.getPassword());
 
-			preparedStatement.executeUpdate();
+			int rows = preparedStatement.executeUpdate();
+			if (rows > 0) {
+				success = true;
+			}
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			throw new Exception("unable to register");
 
 		}
 
-		ConnectionUtil.close(connection, preparedStatement, null);
+		finally {
+			ConnectionUtil.close(connection, preparedStatement, null);
+		}
+	return success;
 	}
 
-	public void setUserInfo(User user) throws Exception {
+	public boolean setUserInfo(User user) throws Exception {
 		Connection connection = ConnectionUtil.getConnection();
 
 		PreparedStatement preparedStatement = null;
+		boolean success=false;
 		try {
 			sql = "insert into employee_info values(?,?,?,?,?)";
 			preparedStatement = connection.prepareStatement(sql);
 			preparedStatement.setInt(1, user.getEmployee().getId());
 			preparedStatement.setString(2, user.getEmailId());
-			preparedStatement.setString(3, user.getPhoneNumber());
-			preparedStatement.setString(4, user.getAddress());
-			preparedStatement.setString(5, user.getGender());
 
-			preparedStatement.executeUpdate();
+			preparedStatement.setString(3, user.getAddress());
+			preparedStatement.setString(4, user.getGender());
+			preparedStatement.setLong(5, user.getPhoneNumber());
+		int rows=	preparedStatement.executeUpdate();
+		if(rows>0)
+		{
+			success=true;
+		}
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
-			throw new Exception("unable to register");
-
+			//e.printStackTrace();
+			 throw new Exception("unable to register");
 		}
 
-		ConnectionUtil.close(connection, preparedStatement, null);
+		finally {
+			ConnectionUtil.close(connection, preparedStatement, null);
+		}
+	return success;
 	}
 
 	public boolean getUserName(String userName) throws Exception {
@@ -161,11 +177,10 @@ public class UserDAO {
 	public User FindById(int id) throws Exception {
 		User user = null;
 		Connection connection = ConnectionUtil.getConnection();
-		PreparedStatement preparedStatement ;
+		PreparedStatement preparedStatement;
 		ResultSet resultSet;
-		String name;
 		try {
-			sql = "select id,email_id,phone_number,address,gender from employee_info where id=?";
+			sql = "select ef.id as id,e.name as name,ef.email_id as emailId,ef.address as address,ef.gender as gender,ef.phone_number as phoneNumber from(employee_info ef inner join employee e on ef.id=e.id)where ef.id=?";
 			preparedStatement = connection.prepareStatement(sql);
 			preparedStatement.setInt(1, id);
 			resultSet = preparedStatement.executeQuery();
@@ -174,12 +189,10 @@ public class UserDAO {
 				user = new User();
 				Employee employee = new Employee();
 				employee.setId(resultSet.getInt("id"));
-				EmployeeDAO employeeDAO = new EmployeeDAO();
-				name = employeeDAO.getName(id);
-				employee.setName(name);
+				employee.setName(resultSet.getString("name"));
 				user.setEmployee(employee);
-				user.setEmailId(resultSet.getString("email_id"));
-				user.setPhoneNumber(resultSet.getString("phone_number"));
+				user.setEmailId(resultSet.getString("emailId"));
+				user.setPhoneNumber(resultSet.getLong("phoneNumber"));
 				user.setAddress(resultSet.getString("address"));
 				user.setGender(resultSet.getString("gender"));
 			}
@@ -202,7 +215,7 @@ public class UserDAO {
 
 			preparedStatement.setString(1, user.getEmailId());
 
-			preparedStatement.setString(2, user.getPhoneNumber());
+			preparedStatement.setLong(2, user.getPhoneNumber());
 			preparedStatement.setString(3, user.getAddress());
 			preparedStatement.setInt(4, user.getEmployee().getId());
 			preparedStatement.executeUpdate();
@@ -213,26 +226,27 @@ public class UserDAO {
 		ConnectionUtil.close(connection, preparedStatement, null);
 
 	}
-public boolean validateId(int id) throws Exception{
-	boolean isValid=true;
-	Connection connection = ConnectionUtil.getConnection();
-	PreparedStatement preparedStatement ;
-	ResultSet resultSet;
-	try {
-		sql = "select user_id from userlogin";
-		preparedStatement = connection.prepareStatement(sql);
-		resultSet = preparedStatement.executeQuery();
 
-		while(resultSet.next()) {
-			if(resultSet.getInt("user_id")==id)
-				isValid=false;
+	public boolean validateId(int id) throws Exception {
+		boolean isValid = true;
+		Connection connection = ConnectionUtil.getConnection();
+		PreparedStatement preparedStatement;
+		ResultSet resultSet;
+		try {
+			sql = "select user_id from userlogin";
+			preparedStatement = connection.prepareStatement(sql);
+			resultSet = preparedStatement.executeQuery();
+
+			while (resultSet.next()) {
+				if (resultSet.getInt("user_id") == id)
+					isValid = false;
+			}
+		} catch (Exception e) {
+			// TODO Auto-generated catch bloc
+			throw new Exception("unable to find records");
 		}
-	} catch (Exception e) {
-		// TODO Auto-generated catch bloc
-		throw new Exception("unable to find records");
-	}
-	ConnectionUtil.close(connection, preparedStatement, resultSet);
-	return isValid;
+		ConnectionUtil.close(connection, preparedStatement, resultSet);
+		return isValid;
 
-}
+	}
 }

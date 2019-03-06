@@ -8,46 +8,40 @@ import java.sql.SQLException;
 
 public class ConnectionUtil {
 	public static Connection getConnection() {
-Connection connection=null;
-			try {
-				Class.forName("oracle.jdbc.driver.OracleDriver");
-String url = "jdbc:oracle:thin:@localhost:1521:XE";
-connection = DriverManager.getConnection(url, "hr", "hr");
-			} catch (ClassNotFoundException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (SQLException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-	
-return connection;
+		Connection connection = null;
+		try {
+			Class.forName("oracle.jdbc.driver.OracleDriver");
+			String url = "jdbc:oracle:thin:@localhost:1521:XE";
+			connection = DriverManager.getConnection(url, "hr", "hr");
+		} catch (ClassNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			throw new RuntimeException("unable to load the class");
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			throw new RuntimeException("unable to get connection");
+		}
+
+		return connection;
 
 	}
-	public static void close(Connection con,PreparedStatement pstmt,ResultSet rs) throws SQLException
-{
-	
-		if(rs!=null)
-		{
+
+	public static void close(Connection con, PreparedStatement pstmt,
+			ResultSet rs) throws SQLException {
+
+		if (rs != null) {
 			rs.close();
 		}
-	if(pstmt!=null)
-	{
-		pstmt.close();
-		
-	}
-	if(con!=null)
-	{
-		con.close();
-	}
-  
+		if (pstmt != null) {
+			pstmt.close();
 
-}
-
-
-	public static void main(String[] args) {
-		// TODO Auto-generated method stub
+		}
+		if (con != null) {
+			con.close();
+		}
 
 	}
 
+	
 }

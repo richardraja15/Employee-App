@@ -28,10 +28,10 @@ public String getAddress() {
 public void setAddress(String address) {
 	this.address = address;
 }
-public String getPhoneNumber() {
+public long getPhoneNumber() {
 	return phoneNumber;
 }
-public void setPhoneNumber(String phoneNumber) {
+public void setPhoneNumber(long phoneNumber) {
 	this.phoneNumber = phoneNumber;
 }
 public Employee getEmployee() {
@@ -48,7 +48,7 @@ public void setGender(String gender) {
 }
 private String emailId;
 private String address;
-private String phoneNumber;
+private long phoneNumber;
 private String gender;
 private Employee employee;
 }

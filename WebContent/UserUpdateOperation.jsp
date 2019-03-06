@@ -55,7 +55,7 @@ body {
 				<td align="left"><label class="col-form-label-lg">PHONE
 						NUMBER</label></td>
 				<td align="center">:</td>
-				<td align="center"><input type="number" name="phoneNumber"
+				<td align="center"><input type="tel" name="phoneNumber"
 					value="${USER.phoneNumber}" maxlength="10"
 					pattern="[6-9]{1}[0-9]{9}" class="form-control"></td>
 			</tr>

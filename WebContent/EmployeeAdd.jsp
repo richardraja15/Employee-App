@@ -29,13 +29,7 @@ body {
 					<br>
 				<br></td>
 			</tr>
-			<tr>
-				<td align="left"><label class="col-form-label-lg"> ID</label></td>
-				<td align="center">:</td>
-				<td align="right"><input type="number" name="id"
-					required="required" min="0" class="form-control"></td>
-			</tr>
-
+			
 			<tr>
 				<td align="left"><label class="col-form-label-lg">NAME</label></td>
 				<td align="center">:</td>

@@ -24,7 +24,7 @@ public class UserUpdateServlet extends HttpServlet {
 		// TODO Auto-generated method stub
 		int id=Integer.parseInt(request.getParameter("id"));
 		String emailId=request.getParameter("emailId");
-		String phoneNumber=request.getParameter("phoneNumber");
+		long phoneNumber=Long.parseLong(request.getParameter("phoneNumber"));
 		String address=request.getParameter("address");
 		Employee employee=new Employee();
 		employee.setId(id);

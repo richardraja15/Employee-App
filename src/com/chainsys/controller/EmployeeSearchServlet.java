@@ -28,11 +28,11 @@ public class EmployeeSearchServlet extends HttpServlet {
 		employee.setId(id);
 		EmployeeDAO employeeDAO = new EmployeeDAO();
 		EmployeeValidator employeeValidator = new EmployeeValidator();
-				try {
+		try {
 			if (employeeValidator.validatById(employee)) {
 				employee = employeeDAO.FindById(id);
 				if (!(employee == null)) {
-				request.setAttribute("EMPLOYEE", employee);
+					request.setAttribute("EMPLOYEE", employee);
 					RequestDispatcher dispatcher = request
 							.getRequestDispatcher("EmployeeSearch.jsp");
 					dispatcher.forward(request, response);
@@ -46,10 +46,7 @@ public class EmployeeSearchServlet extends HttpServlet {
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
-			request.setAttribute("ERROR_MSG", e.getMessage());
-			RequestDispatcher dispatcher = request
-					.getRequestDispatcher("EmployeeSelect.jsp");
-			dispatcher.forward(request, response);
+
 		}
 
 	}

@@ -28,7 +28,7 @@ public class UserRegistrationController extends HttpServlet {
 		String password = request.getParameter("password");
 		String emailId = request.getParameter("emailId");
 		String confirmPassword = request.getParameter("confirmPassword");
-		String phoneNumber = request.getParameter("phoneNumber");
+		long phoneNumber =Long.parseLong(request.getParameter("phoneNumber")) ;
 		String gender = request.getParameter("gender");
 		String address = request.getParameter("address");
 		Employee employee = new Employee();

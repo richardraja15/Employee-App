@@ -27,7 +27,7 @@ public class EmployeeAddServlet extends HttpServlet {
 	protected void doPost(HttpServletRequest request,
 			HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
-		int id = Integer.parseInt(request.getParameter("id"));
+
 		String name = request.getParameter("name");
 		LocalDate joiningDate = LocalDate.parse(request
 				.getParameter("joiningDate"));
@@ -39,7 +39,6 @@ public class EmployeeAddServlet extends HttpServlet {
 		Position position = new Position();
 		position.setId(positionId);
 		Employee employee = new Employee();
-		employee.setId(id);
 		employee.setName(name);
 		employee.setJoiningDate(joiningDate);
 		employee.setDepartment(department);
@@ -48,21 +47,21 @@ public class EmployeeAddServlet extends HttpServlet {
 		EmployeeValidator validator = new EmployeeValidator();
 		try {
 			if (validator.validateAdd(employee)) {
-		employeeDAO.addEmployee(employee);
-				ArrayList<Employee> list = employeeDAO.FindAll();
-				request.setAttribute("EMPLOYEE", list);
+				if (employeeDAO.addEmployee(employee)) {
+					ArrayList<Employee> list = employeeDAO.FindAll();
+					request.setAttribute("EMPLOYEE", list);
 
-				RequestDispatcher dispatcher = request
-						.getRequestDispatcher("EmployeeList.jsp");
-				dispatcher.forward(request, response);
+					RequestDispatcher dispatcher = request
+							.getRequestDispatcher("EmployeeList.jsp");
+					dispatcher.forward(request, response);
 				}
-			
+			}
 
 		}
 
 		catch (Exception E) {
-			
-            E.printStackTrace();
+
+			E.printStackTrace();
 			request.setAttribute("ERROR_MSG", E.getMessage());
 
 			RequestDispatcher dispatcher = request
