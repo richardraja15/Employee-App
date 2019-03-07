@@ -201,6 +201,10 @@ public class EmployeeDAO {
 
 	}
 
+	/**
+	 * @return
+	 * @throws Exception
+	 */
 	public ArrayList<Employee> FindAll() throws Exception {
 		Connection connection = ConnectionUtil.getConnection();
 		PreparedStatement preparedStatement = null;

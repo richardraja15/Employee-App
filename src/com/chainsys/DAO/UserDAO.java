@@ -18,7 +18,7 @@ public class UserDAO {
 		PreparedStatement preparedStatement = null;
 		boolean success = false;
 		try {
-			sql = "insert into userlogin values(?,?,?)";
+			sql = "insert into userlogin values(userlogin_id_seq.next val,?,?,?)";
 			preparedStatement = connection.prepareStatement(sql);
 			preparedStatement.setInt(1, user.getEmployee().getId());
 			preparedStatement.setString(2, user.getUserName());
@@ -46,7 +46,7 @@ public class UserDAO {
 		PreparedStatement preparedStatement = null;
 		boolean success=false;
 		try {
-			sql = "insert into employee_info values(?,?,?,?,?)";
+			sql = "insert into employee_info values(info_id_seq,?,?,?,?,?)";
 			preparedStatement = connection.prepareStatement(sql);
 			preparedStatement.setInt(1, user.getEmployee().getId());
 			preparedStatement.setString(2, user.getEmailId());
