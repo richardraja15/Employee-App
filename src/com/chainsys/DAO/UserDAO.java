@@ -12,24 +12,23 @@ public class UserDAO {
 
 	String sql;
 
-	public boolean setUserName(User user) throws Exception {
+	public void setUserName(User user) throws Exception {
 		Connection connection = ConnectionUtil.getConnection();
 
 		PreparedStatement preparedStatement = null;
-		boolean success = false;
+
 		try {
-			sql = "insert into userlogin values(userlogin_id_seq.next val,?,?,?)";
+			sql = "insert into userlogin values(userlogin_id_seq.nextval,?,?,?)";
 			preparedStatement = connection.prepareStatement(sql);
 			preparedStatement.setInt(1, user.getEmployee().getId());
 			preparedStatement.setString(2, user.getUserName());
 			preparedStatement.setString(3, user.getPassword());
 
-			int rows = preparedStatement.executeUpdate();
-			if (rows > 0) {
-				success = true;
-			}
+			preparedStatement.executeUpdate();
+
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
+			//e.printStackTrace();
 			throw new Exception("unable to register");
 
 		}
@@ -37,38 +36,31 @@ public class UserDAO {
 		finally {
 			ConnectionUtil.close(connection, preparedStatement, null);
 		}
-	return success;
 	}
 
-	public boolean setUserInfo(User user) throws Exception {
+	public void setUserInfo(User user) throws Exception {
 		Connection connection = ConnectionUtil.getConnection();
 
 		PreparedStatement preparedStatement = null;
-		boolean success=false;
 		try {
-			sql = "insert into employee_info values(info_id_seq,?,?,?,?,?)";
+			sql = "insert into employee_info values(info_id_seq.nextval,?,?,?,?,?)";
 			preparedStatement = connection.prepareStatement(sql);
 			preparedStatement.setInt(1, user.getEmployee().getId());
 			preparedStatement.setString(2, user.getEmailId());
-
-			preparedStatement.setString(3, user.getAddress());
-			preparedStatement.setString(4, user.getGender());
-			preparedStatement.setLong(5, user.getPhoneNumber());
-		int rows=	preparedStatement.executeUpdate();
-		if(rows>0)
-		{
-			success=true;
-		}
+			preparedStatement.setLong(3, user.getPhoneNumber());
+			preparedStatement.setString(4, user.getAddress());
+			preparedStatement.setString(5, user.getGender());
+			
+			preparedStatement.executeUpdate();
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
-			//e.printStackTrace();
-			 throw new Exception("unable to register");
+			// e.printStackTrace();
+			throw new Exception("unable to register");
 		}
 
 		finally {
 			ConnectionUtil.close(connection, preparedStatement, null);
 		}
-	return success;
 	}
 
 	public boolean getUserName(String userName) throws Exception {
@@ -130,17 +122,17 @@ public class UserDAO {
 		ResultSet resultSet;
 		int id = 0;
 		try {
-			sql = "select user_id from userlogin where user_name=?";
+			sql = "select emp_id from userlogin where user_name=?";
 			preparedStatement = connection.prepareStatement(sql);
 			preparedStatement.setString(1, userName);
 			resultSet = preparedStatement.executeQuery();
 			if (resultSet.next()) {
-				id = resultSet.getInt("user_id");
+				id = resultSet.getInt("emp_id");
 			}
 
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
-			throw new Exception("unable to get name");
+			throw new Exception("unable to get id");
 		}
 		ConnectionUtil.close(connection, preparedStatement, resultSet);
 		return id;
@@ -154,7 +146,7 @@ public class UserDAO {
 		int id;
 		String name = null;
 		try {
-			sql = "select name from employee_info where id=?";
+			sql = "select name from employee_info where emp_id=?";
 			preparedStatement = connection.prepareStatement(sql);
 			UserDAO userDAO = new UserDAO();
 			id = userDAO.getId(userName);
@@ -180,7 +172,7 @@ public class UserDAO {
 		PreparedStatement preparedStatement;
 		ResultSet resultSet;
 		try {
-			sql = "select ef.id as id,e.name as name,ef.email_id as emailId,ef.address as address,ef.gender as gender,ef.phone_number as phoneNumber from(employee_info ef inner join employee e on ef.id=e.id)where ef.id=?";
+			sql = "select ef.emp_id as id,e.name as name,ef.email_id as emailId,ef.address as address,ef.gender as gender,ef.phone_number as phoneNumber from(employee_info ef inner join employee e on ef.emp_id=e.id)where ef.emp_id=?";
 			preparedStatement = connection.prepareStatement(sql);
 			preparedStatement.setInt(1, id);
 			resultSet = preparedStatement.executeQuery();
@@ -198,6 +190,7 @@ public class UserDAO {
 			}
 		} catch (Exception e) {
 			// TODO Auto-generated catch bloc
+			e.printStackTrace();
 			throw new Exception("unable to find records");
 		}
 		ConnectionUtil.close(connection, preparedStatement, resultSet);
@@ -210,7 +203,7 @@ public class UserDAO {
 
 		PreparedStatement preparedStatement;
 		try {
-			sql = "update employee_info set email_id=?,phone_number=?,address=? where id=?";
+			sql = "update employee_info set email_id=?,phone_number=?,address=? where emp_id=?";
 			preparedStatement = connection.prepareStatement(sql);
 
 			preparedStatement.setString(1, user.getEmailId());
@@ -221,7 +214,7 @@ public class UserDAO {
 			preparedStatement.executeUpdate();
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
-			throw new Exception("unable to update records");
+			throw new Exception("unable to update user details");
 		}
 		ConnectionUtil.close(connection, preparedStatement, null);
 
@@ -233,16 +226,17 @@ public class UserDAO {
 		PreparedStatement preparedStatement;
 		ResultSet resultSet;
 		try {
-			sql = "select user_id from userlogin";
+			sql = "select emp_id from userlogin";
 			preparedStatement = connection.prepareStatement(sql);
 			resultSet = preparedStatement.executeQuery();
 
 			while (resultSet.next()) {
-				if (resultSet.getInt("user_id") == id)
+				if (resultSet.getInt("emp_id") == id)
 					isValid = false;
 			}
 		} catch (Exception e) {
 			// TODO Auto-generated catch bloc
+			e.printStackTrace();
 			throw new Exception("unable to find records");
 		}
 		ConnectionUtil.close(connection, preparedStatement, resultSet);

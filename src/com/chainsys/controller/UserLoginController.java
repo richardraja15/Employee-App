@@ -42,10 +42,7 @@ public class UserLoginController extends HttpServlet {
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-			request.setAttribute("ERROR_MSG",e.getMessage());
-			RequestDispatcher dispatcher=request.getRequestDispatcher("UserLogin.jsp");
-			dispatcher.forward(request, response);
-		
+			
 		}
 
 	}

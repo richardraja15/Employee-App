@@ -34,7 +34,7 @@ public class EmployeeDAO {
 			}
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
-			throw new Exception("unable to add");
+			throw new Exception("unable to add Employee");
 
 		} finally {
 			ConnectionUtil.close(connection, preparedStatement, null);
@@ -72,7 +72,7 @@ public class EmployeeDAO {
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 
-			throw new Exception("unable to select records by id");
+			throw new Exception("unable to find id");
 		}
 		finally {
 			ConnectionUtil.close(connection, preparedStatement,resultSet);
@@ -144,7 +144,7 @@ public class EmployeeDAO {
 			preparedStatement.executeUpdate();
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
-			throw new Exception("unable to update");
+			throw new Exception("unable to update your details");
 		}
 		finally {
 			ConnectionUtil.close(connection, preparedStatement, null);
@@ -169,7 +169,7 @@ public class EmployeeDAO {
 			}
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
-			throw new Exception("ID not available");
+			throw new Exception("ID not enrolled");
 		}
 		ConnectionUtil.close(connection, preparedStatement, resultSet);
 		return isValid;
