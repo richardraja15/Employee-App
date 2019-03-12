@@ -1,9 +1,6 @@
 package com.chainsys.controller;
 
-import java.io.IOException;
-
 import javax.servlet.RequestDispatcher;
-import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -14,23 +11,21 @@ import com.chainsys.DAO.EmployeeDAO;
 import com.chainsys.exceptioncontroller.EmployeeValidator;
 
 /**
- * Servlet implementation class SelectServlet
+ * Servlet implementation class SelectServlet This servlet is used to search for
+ * specific id
  */
 @WebServlet("/EmployeeSearchServlet")
 public class EmployeeSearchServlet extends HttpServlet {
-	private static final long serialVersionUID = 1L;
-
 	protected void doPost(HttpServletRequest request,
-			HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
+			HttpServletResponse response) {
 		Employee employee = new Employee();
-		int id = Integer.parseInt(request.getParameter("id"));
-		employee.setId(id);
+		int empId = Integer.parseInt(request.getParameter("id"));
+		employee.setId(empId);
 		EmployeeDAO employeeDAO = new EmployeeDAO();
 		EmployeeValidator employeeValidator = new EmployeeValidator();
 		try {
 			if (employeeValidator.validatById(employee)) {
-				employee = employeeDAO.FindById(id);
+				employee = employeeDAO.FindById(empId);
 				if (!(employee == null)) {
 					request.setAttribute("EMPLOYEE", employee);
 					RequestDispatcher dispatcher = request
@@ -41,14 +36,10 @@ public class EmployeeSearchServlet extends HttpServlet {
 					RequestDispatcher dispatcher = request
 							.getRequestDispatcher("EmployeeSelect.jsp");
 					dispatcher.forward(request, response);
-
 				}
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
-
 		}
-
 	}
-
 }

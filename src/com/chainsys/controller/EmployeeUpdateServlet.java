@@ -16,15 +16,14 @@ import com.chainsys.DAO.EmployeeDAO;
 import com.chainsys.exceptioncontroller.EmployeeValidator;
 
 /**
- * Servlet implementation class UpdateServlet
+ * Servlet implementation class UpdateServlet This servlet performs update
+ * operation
  */
 @WebServlet("/EmployeeUpdateServlet")
 public class EmployeeUpdateServlet extends HttpServlet {
-	private static final long serialVersionUID = 1L;
-
 	protected void doPost(HttpServletRequest request,
-			HttpServletResponse response) throws ServletException, IOException {
-		int id = Integer.parseInt(request.getParameter("id"));
+			HttpServletResponse response) {
+		int empId = Integer.parseInt(request.getParameter("id"));
 		String name = request.getParameter("name");
 		LocalDate joiningDate = LocalDate.parse(request
 				.getParameter("joiningDate"));
@@ -37,32 +36,36 @@ public class EmployeeUpdateServlet extends HttpServlet {
 		Position position = new Position();
 		position.setId(positionId);
 		Employee employee = new Employee();
-		employee.setId(id);
+		employee.setId(empId);
 		employee.setName(name);
 		employee.setJoiningDate(joiningDate);
 		employee.setDepartment(department);
 		employee.setPosition(position);
-
 		EmployeeDAO employeeDAO = new EmployeeDAO();
 		EmployeeValidator employeeValidator = new EmployeeValidator();
 		try {
-			if (employeeValidator.validatByName(employee)) {
+			if (employeeValidator.validateAdd(employee)) {
 				employeeDAO.Update(employee);
 				Employee employee2 = new Employee();
-				employee2 = employeeDAO.FindById(id);
+				employee2 = employeeDAO.FindById(empId);
 				request.setAttribute("EMPLOYEE", employee2);
 				RequestDispatcher dispatcher = request
 						.getRequestDispatcher("EmployeeSearch.jsp");
 				dispatcher.forward(request, response);
 			}
-
 		} catch (Exception E) {
 			E.printStackTrace();
 			request.setAttribute("ERROR_MSG", E.getMessage());
 
 			RequestDispatcher dispatcher = request
 					.getRequestDispatcher("EmployeeUpdateOperation.jsp");
-			dispatcher.forward(request, response);
+			try {
+				dispatcher.forward(request, response);
+			} catch (ServletException e) {
+				e.printStackTrace();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
 
 		}
 

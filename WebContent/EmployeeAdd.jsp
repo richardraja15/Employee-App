@@ -34,7 +34,7 @@ body {
 				<td align="left"><label class="col-form-label-lg">NAME</label></td>
 				<td align="center">:</td>
 				<td align="right"><input type="text" name="name" required
-					pattern="[A-Za-z].{1,20}" class="form-control"></td>
+					pattern="[A-Za-z]{1,32}" class="form-control" size="30" maxlength="30" autocomplete="off"></td>
 			</tr>
 
 

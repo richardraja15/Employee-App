@@ -1,6 +1,7 @@
 package com.chainsys.controller;
 
 import java.io.IOException;
+
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -14,25 +15,25 @@ import com.chainsys.DAO.EmployeeDAO;
 import com.chainsys.DAO.UserDAO;
 
 /**
- * Servlet implementation class RegistrationController
+ * Servlet implementation class RegistrationController This servlet is used for
+ * new users to register
  */
 @WebServlet("/UserRegistrationController")
 public class UserRegistrationController extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
 	protected void doPost(HttpServletRequest request,
-			HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
-		int id = Integer.parseInt(request.getParameter("id"));
+			HttpServletResponse response) {
+		int empId = Integer.parseInt(request.getParameter("id"));
 		String userName = request.getParameter("userName");
 		String password = request.getParameter("password");
 		String emailId = request.getParameter("emailId");
 		String confirmPassword = request.getParameter("confirmPassword");
-		long phoneNumber =Long.parseLong(request.getParameter("phoneNumber")) ;
+		long phoneNumber = Long.parseLong(request.getParameter("phoneNumber"));
 		String gender = request.getParameter("gender");
 		String address = request.getParameter("address");
 		Employee employee = new Employee();
-		employee.setId(id);
+		employee.setId(empId);
 		User user = new User();
 		user.setEmailId(emailId);
 		user.setPhoneNumber(phoneNumber);
@@ -43,20 +44,18 @@ public class UserRegistrationController extends HttpServlet {
 		user.setGender(gender);
 		EmployeeDAO employeeDAO = new EmployeeDAO();
 		UserDAO userDAO = new UserDAO();
-		String message;
+		String message = null;
 		try {
 
 			if (password.contentEquals(confirmPassword)) {
-				if (employeeDAO.getId(id)) {
-					if (userDAO.validateId(id)) {
+				if (employeeDAO.getId(empId)) {
+					if (userDAO.validateId(empId)) {
 						if (userDAO.getUserName(userName)) {
 
 							userDAO.setUserInfo(user);
 							userDAO.setUserName(user);
 							message = "Registered";
 						} else {
-							// request.setAttribute("Message",
-							// "Duplicate User Name!!!");
 							message = "Username already taken";
 						}
 					} else {
@@ -74,11 +73,16 @@ public class UserRegistrationController extends HttpServlet {
 			dispatcher.forward(request, response);
 
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			request.setAttribute("MESSAGE", e.getMessage());
 			RequestDispatcher dispatcher = request
 					.getRequestDispatcher("UserRegistration.jsp");
-			dispatcher.forward(request, response);
+			try {
+				dispatcher.forward(request, response);
+			} catch (ServletException e1) {
+				e1.printStackTrace();
+			} catch (IOException e1) {
+				e1.printStackTrace();
+			}
 
 		}
 

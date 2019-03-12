@@ -27,7 +27,7 @@ body {
 				<td colspan="3" align="center"><h3>EMPLOYEE UPDATE</h3></td>
 			</tr>
 			<tr>
-				<td align="left"><label class="col-form-label-lg"> ID</label></td>
+				<td align="left"><label class="col-form-label-lg">Employee ID</label></td>
 				<td align="center">:</td>
 				<td align="center"><input type="number" name="id"
 					value="${EMPLOYEE.id}" readonly="readonly" class="form-control"></td>

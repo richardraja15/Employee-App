@@ -30,6 +30,7 @@ body {
 		<thead class="thead-dark">
 			<tr>
 				<th>id</th>
+				<th>Employee id</th>
 				<th>name</th>
 				<th>Department name</th>
 				<th>Position name</th>
@@ -41,6 +42,7 @@ body {
 			<c:forEach var="employee" items="${EMPLOYEE}">
 				<tr>
 					<td>${employee.id}</td>
+					<td>${employee.empId}</td>
 					<td>${employee.name}</td>
 					<td>${employee.department.name}</td>
 					<td>${employee.position.name}</td>

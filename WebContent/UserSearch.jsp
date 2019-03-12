@@ -29,6 +29,7 @@ body {
 			<tr>
 				<th>id</th>
 				<th>name</th>
+				<th>gender</th>
 				<th>Email Id</th>
 				<th>Phone Number</th>
 				<th>Address</th>
@@ -38,6 +39,7 @@ body {
 			<tr>
 				<td>${USER.employee.id}</td>
 				<td>${USER.employee.name}</td>
+				<td>${USER.gender}</td>
 				<td>${USER.emailId}</td>
 				<td>${USER.phoneNumber}</td>
 				<td>${USER.address}</td>

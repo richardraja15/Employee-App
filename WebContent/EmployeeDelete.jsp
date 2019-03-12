@@ -32,7 +32,7 @@ div {
 						<br></td>
 				</tr>
 				<tr>
-					<td align="center"><label class="col-form-label-lg">ID</label></td>
+					<td align="center"><label class="col-form-label-lg">Employee ID</label></td>
 					<td align="center">:</td>
 					<td align="center"><input type="number" name="id"
 						required="required" min="0" class="form-control"></td>

@@ -38,7 +38,7 @@ div {
 				<td colspan="3" align="center"><h3>UPDATE EMPLOYEE</h3></td>
 			</tr>
 			<tr>
-				<td align="center"><label class="col-form-label-lg">ID</label></td>
+				<td align="center"><label class="col-form-label-lg">Employee ID</label></td>
 				<td align="center">:</td>
 				<td align="center"><input type="number" name="id"
 					value="<%=id%>" readonly="readonly" class="form-control"></td>

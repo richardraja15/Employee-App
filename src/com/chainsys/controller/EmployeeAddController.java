@@ -1,10 +1,8 @@
 package com.chainsys.controller;
 
-import java.io.IOException;
 import java.util.ArrayList;
 
 import javax.servlet.RequestDispatcher;
-import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -16,38 +14,28 @@ import com.chainsys.DAO.DepartmentDAO;
 import com.chainsys.DAO.PositionDAO;
 
 /**
- * Servlet implementation class AddController
+ * Servlet implementation class AddController This servlet is used to fetch data
+ * for Add Operation
  */
 @WebServlet("/EmployeeAddController")
 public class EmployeeAddController extends HttpServlet {
-	private static final long serialVersionUID = 1L;
-
 	protected void doGet(HttpServletRequest request,
-			HttpServletResponse response) throws ServletException, IOException {
+			HttpServletResponse response) {
 		// TODO Auto-generated method stub
-		DepartmentDAO departmentDAO=new DepartmentDAO();
-		PositionDAO positionDAO=new PositionDAO();
-		
-		try{
-			ArrayList<Department> arrayList=new ArrayList<Department>();
+		DepartmentDAO departmentDAO = new DepartmentDAO();
+		PositionDAO positionDAO = new PositionDAO();
+		try {
+			ArrayList<Department> arrayList = new ArrayList<Department>();
 			arrayList = departmentDAO.select();
-			ArrayList<Position> List=new ArrayList<Position>();
+			ArrayList<Position> List = new ArrayList<Position>();
 			List = positionDAO.select();
-				
 			request.setAttribute("DEPARTMENT", arrayList);
-			request.setAttribute("POSITION",List);
-				RequestDispatcher dispatcher = request
-						.getRequestDispatcher("EmployeeAdd.jsp");
-				dispatcher.include(request, response);
-			
-			
+			request.setAttribute("POSITION", List);
+			RequestDispatcher dispatcher = request
+					.getRequestDispatcher("EmployeeAdd.jsp");
+			dispatcher.include(request, response);
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
-			catch(Exception e)
-			{
-				e.printStackTrace();
-			}
-
-
-
-}
+	}
 }

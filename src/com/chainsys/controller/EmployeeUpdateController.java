@@ -1,10 +1,8 @@
 package com.chainsys.controller;
 
-import java.io.IOException;
 import java.util.ArrayList;
 
 import javax.servlet.RequestDispatcher;
-import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -19,18 +17,16 @@ import com.chainsys.DAO.PositionDAO;
 import com.chainsys.exceptioncontroller.EmployeeValidator;
 
 /**
- * Servlet implementation class UpdateController
+ * Servlet implementation class UpdateController This servlet fetch employee
+ * details to perform update operation
  */
 @WebServlet("/EmployeeUpdateController")
 public class EmployeeUpdateController extends HttpServlet {
-	private static final long serialVersionUID = 1L;
-
 	protected void doPost(HttpServletRequest request,
-			HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
+			HttpServletResponse response) {
 		Employee employee = new Employee();
-		int id = Integer.parseInt(request.getParameter("id"));
-		employee.setId(id);
+		int empId = Integer.parseInt(request.getParameter("id"));
+		employee.setId(empId);
 		EmployeeDAO employeeDAO = new EmployeeDAO();
 		DepartmentDAO departmentDAO = new DepartmentDAO();
 		PositionDAO positionDAO = new PositionDAO();
@@ -39,37 +35,26 @@ public class EmployeeUpdateController extends HttpServlet {
 		EmployeeValidator employeeValidator = new EmployeeValidator();
 		try {
 			if (employeeValidator.validatById(employee)) {
-				employee = employeeDAO.FindById(id);
+				employee = employeeDAO.FindById(empId);
 
 				if (!(employee == null)) {
 					dList = departmentDAO.select();
 					pList = positionDAO.select();
-
 					request.setAttribute("EMPLOYEE", employee);
 					request.setAttribute("DEPARTMENT", dList);
 					request.setAttribute("POSITION", pList);
 					RequestDispatcher dispatcher = request
 							.getRequestDispatcher("EmployeeUpdateOperation.jsp");
 					dispatcher.forward(request, response);
-
 				} else {
 					request.setAttribute("ERROR_MSG", "Id not found!!!");
 					RequestDispatcher dispatcher = request
 							.getRequestDispatcher("EmployeeUpdate.jsp");
 					dispatcher.forward(request, response);
-
 				}
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
-			request.setAttribute("ERROR_MSG", e.getMessage());
-
-			RequestDispatcher dispatcher = request
-					.getRequestDispatcher("EmployeeUpdate.jsp");
-			dispatcher.forward(request, response);
-
 		}
-
 	}
-
 }

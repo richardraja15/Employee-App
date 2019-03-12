@@ -18,16 +18,14 @@ import com.chainsys.DAO.EmployeeDAO;
 import com.chainsys.exceptioncontroller.EmployeeValidator;
 
 /**
- * Servlet implementation class SaveServlet
+ * Servlet implementation class SaveServlet This servlet is used to enroll
+ * employees
  */
 @WebServlet("/EmployeeAddServlet")
 public class EmployeeAddServlet extends HttpServlet {
-	private static final long serialVersionUID = 1L;
-
 	protected void doPost(HttpServletRequest request,
-			HttpServletResponse response) throws ServletException, IOException {
+			HttpServletResponse response) {
 		// TODO Auto-generated method stub
-
 		String name = request.getParameter("name");
 		LocalDate joiningDate = LocalDate.parse(request
 				.getParameter("joiningDate"));
@@ -50,23 +48,24 @@ public class EmployeeAddServlet extends HttpServlet {
 				if (employeeDAO.addEmployee(employee)) {
 					ArrayList<Employee> list = employeeDAO.FindAll();
 					request.setAttribute("EMPLOYEE", list);
-
 					RequestDispatcher dispatcher = request
 							.getRequestDispatcher("EmployeeList.jsp");
 					dispatcher.forward(request, response);
 				}
 			}
-
-		}
-
-		catch (Exception E) {
-
-			E.printStackTrace();
-			request.setAttribute("ERROR_MSG", E.getMessage());
+		} catch (Exception e) {
+			e.printStackTrace();
+			request.setAttribute("ERROR_MSG", e.getMessage());
 
 			RequestDispatcher dispatcher = request
 					.getRequestDispatcher("EmployeeAdd.jsp");
-			dispatcher.forward(request, response);
+			try {
+				dispatcher.forward(request, response);
+			} catch (ServletException e1) {
+				e1.printStackTrace();
+			} catch (IOException e1) {
+				e1.printStackTrace();
+			}
 
 		}
 

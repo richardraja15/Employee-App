@@ -29,6 +29,7 @@ body {
 		<thead class="thead-dark">
 			<tr>
 				<th>id</th>
+				<th>Employee id</th>
 				<th>name</th>
 				<th>Department Name</th>
 				<th>Position Name</th>
@@ -39,6 +40,7 @@ body {
 		<tbody>
 			<tr>
 				<td>${EMPLOYEE.id}</td>
+				<td>${EMPLOYEE.empId}</td>
 				<td>${EMPLOYEE.name}</td>
 				<td>${EMPLOYEE.department.name}</td>
 				<td>${EMPLOYEE.position.name}</td>
@@ -52,5 +54,6 @@ body {
 		<a href="AdminHome.html" style="color: purple;"><button
 				type="button" class="btn btn-success">Home</button></a>
 	</h3>
+	
 </body>
 </html>

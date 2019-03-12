@@ -11,20 +11,24 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 /**
- * Servlet implementation class LogoutController
+ * Servlet implementation class LogoutController This servlet is used to close
+ * the session
  */
 @WebServlet("/UserLogoutController")
 public class UserLogoutController extends HttpServlet {
-	private static final long serialVersionUID = 1L;
-
 	protected void doGet(HttpServletRequest request,
-			HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
-HttpSession session=request.getSession(false);
-session.removeAttribute("ID");
-session.invalidate();
-RequestDispatcher dispatcher=request.getRequestDispatcher("UserLogin.jsp");
-dispatcher.forward(request, response);
-}
-
+			HttpServletResponse response) {
+		HttpSession session = request.getSession(false);
+		session.removeAttribute("ID");
+		session.invalidate();
+		RequestDispatcher dispatcher = request
+				.getRequestDispatcher("UserLogin.jsp");
+		try {
+			dispatcher.forward(request, response);
+		} catch (ServletException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
 }
